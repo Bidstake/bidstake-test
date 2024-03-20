@@ -1,10 +1,16 @@
+body{
+    background-color: #a39d9d;
+}
+
 .login-box {
-    width: 300px;
+    width: 500px;
     margin: 100px auto;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 4px solid #989595;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: #a39d9d;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 30px;
 }
 
 .login-box label {
@@ -17,7 +23,7 @@
     width: 100%;
     padding: 8px;
     margin-bottom: 15px;
-    border: 1px solid #ccc;
+    border: 4px solid #ccc;
     border-radius: 3px;
     box-sizing: border-box;
 }
@@ -30,8 +36,10 @@
     background-color: #007bff;
     color: #fff;
     cursor: pointer;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 20px;
 }
 
 .login-box input[type="submit"]:hover {
-    background-color: #0056b3;
+    background-color: #08ee0c;
 }
