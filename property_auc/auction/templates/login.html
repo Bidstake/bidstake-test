@@ -35,8 +35,8 @@ body{
 }
 .shape:first-child{
     background: linear-gradient(
-        #1845ad,
-        #23a2f6
+        #23a2f6,
+        #aca8a8
     );
     left: -80px;
     top: -80px;
@@ -110,6 +110,33 @@ button{
     border-radius: 5px;
     cursor: pointer;
 }
+button:hover {
+  background-color: #45a049; /* Background color on hover */
+}
+
+button::after {
+  content: "";
+  position: absolute;
+  top: 74.5%;
+  left: 57.5%;
+  margin-top: 0px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent transparent #030303; /* Adjust arrow color here */
+  transition: margin-left 0.4s ease;
+}
+
+button:hover::after {
+  margin-left: 20px; /* Adjust arrow slide distance here */
+}
+
+button span {
+  transition: 0.4s;
+}
+
+button:hover span {
+  margin-left: 20px; /* Adjust text slide distance here */
+}
 .social{
   margin-top: 30px;
   display: flex;
@@ -132,6 +159,10 @@ button{
 .social i{
   margin-right: 4px;
 }
+.register{
+    padding: 20px;
+    text-align: center;
+}
 
     </style>
 </head>
@@ -150,10 +181,12 @@ button{
         <input type="password" placeholder="Password" id="password">
 
         <button>Log In</button>
-        <div class="social">
+        <div class="register"><p>Not a member? <a href="register.html">Register</a></p></div>
+        <!-- <div class="social">
           <div class="go"><i class="fab fa-google"></i>  Google</div>
           <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
-        </div>
+          
+        </div> -->
     </form>
 </body>
 </html>
