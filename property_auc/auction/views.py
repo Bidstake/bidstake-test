@@ -1,3 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+def index(request):    
+    return render(request, "auctions/index.html",{
+        # "a1": auctionlist.objects.filter(active_bool = True),
+            })
