@@ -173,24 +173,32 @@ button:hover span {
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form>
+    {% if message %}
+    <div>{{ message }}</div>
+{% endif %}
+    <form  action="{% url 'register' %}" method="post">
+      {% csrf_token %}
         <h3>Register Here</h3>
 
         <label for="username">Username</label>
-        <input type="text" placeholder="Email or Phone" id="username">
+        <input type="text" name="username" placeholder="Email or Phone" id="username">
 
         <label for="password">Password</label>
-        <input type="password" placeholder="Password" id="password">
+        <input type="password" name="password" placeholder="Password" id="password">
+        <label for="password">confirm Password</label>
+        <input type="password" name="confirmation" placeholder="Password" id="password">
 
         <label for="Phone">Phone Number</label>
-        <input type="tel" placeholder="Phone Number" id="Phone">
+        <input type="tel" name="phone" placeholder="Phone Number" id="Phone">
 
-        <button>Register</button>
+        <button class="btn btn-primary" type="submit" value="Register">Register</button>
             <!-- <div class="social">
           <div class="go"><i class="fab fa-google"></i>  Google</div>
           <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
           
         </div> -->
     </form>
+
+
 </body>
 </html>
