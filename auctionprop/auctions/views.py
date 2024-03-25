@@ -50,3 +50,4 @@ def register(request):
         return HttpResponseRedirect(reverse("home"))
     else:
         return render(request, "auctions/register.html")
+
