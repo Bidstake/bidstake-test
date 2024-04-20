@@ -23,7 +23,7 @@ def user_login(request):
 
         if user is not None:
             auth_login(request, user)
-            return HttpResponseRedirect(reverse("home"))
+            return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."
