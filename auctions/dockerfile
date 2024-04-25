@@ -1,5 +1,0 @@
-FROM python
-WORKDIR D:\newrepo\bidstake-test\bidstake-test\auctions\apps.py
-COPY ./apps
-
-CMD["python3","apps.py"]
