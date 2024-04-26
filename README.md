@@ -1,3 +1,8 @@
+
+## Screenshots
+
+![logo-color](https://github.com/Bidstake/bidstake-test/assets/139366115/8838643b-9301-4f16-9c7e-49f1c64f9d03)
+
  
 # BidStake
 
@@ -9,13 +14,6 @@ Bidstake's online presence extends across India, offering nationwide access to l
 - [Satyam](https://github.com/SatyamPote)
 - [Rachitkum](https://github.com/rachitkum)
 - [ahmed](https://github.com/ahmedatk)
-
-
-## Screenshots
-
-![App Screenshot](https://ibb.co/FnLLknQ)
-
-
 
 
 ## FAQ
