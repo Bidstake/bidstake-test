@@ -1,6 +1,3 @@
-
-## Screenshots
-
 ![logo-color](https://github.com/Bidstake/bidstake-test/assets/139366115/8838643b-9301-4f16-9c7e-49f1c64f9d03)
 
  
@@ -8,6 +5,7 @@
 
 
 Bidstake's online presence extends across India, offering nationwide access to land listings. Whether it's urban plots, rural farmland, or commercial properties, Bidstake caters to diverse land requirements across the country
+
 
 ## Contributing
 
