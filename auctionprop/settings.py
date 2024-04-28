@@ -75,9 +75,17 @@ WSGI_APPLICATION = 'auctionprop.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
+    DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',   # Change the database engine to MySQL
+        'NAME': 'Local instance MySQL80',           # Replace 'your_database_name' with the name of your MySQL database
+        'USER': 'root',          # Replace 'your_mysql_username' with your MySQL username
+        'PASSWORD': 'Nathan290$',      # Replace 'your_mysql_password' with your MySQL password
+        'HOST': 'localhost',                    # Or the host where your MySQL server is running
+        'PORT': '3306',                         # MySQL default port
+    }
+}
+
     }
 }
 AUTH_USER_MODEL = 'auctions.User'
