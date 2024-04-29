@@ -3,9 +3,9 @@ version: '1'
 services:
   web:
     build: .
-    command: bash -c "python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py runserver 0.0.0.0:8900"
     container_name: bidstake
     volumes:
       - .:/bidstake
     ports: 
-      - "8000:8000"
+      - "8900:8900"
