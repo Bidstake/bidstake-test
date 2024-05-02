@@ -12,9 +12,9 @@ Bidstake's online presence extends across India, offering nationwide access to l
 - [Satyam](https://github.com/SatyamPote)
 - [Rachitkum](https://github.com/rachitkum)
 - [ahmed](https://github.com/ahmedatk)
-- [anshul](https://github.com/ahmedatk)
-- [senthil](https://github.com/ahmedatk)
-- [guneet](https://github.com/ahmedatk)
+- [anshul](https://github.com/)
+- [senthil](https://github.com/)
+- [guneet](https://github.com/)
 
 
 ## FAQ
@@ -30,5 +30,5 @@ You can support our Bidstake website by sharing it to your friends or colleagues
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT]()
 
