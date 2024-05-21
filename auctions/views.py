@@ -86,23 +86,9 @@ def create(request):
 
     return render(request, 'auctions/create.html')
 def products(request):
-    # Retrieve all listings from the database
     listings = Listing.objects.all()
 
-    # Pass the listings data to the template
     return render(request, 'auctions/products.html', {'listings': listings})
-# def create(request):
-#     if request.method == "POST":
-#         m = auctionlist()
-#         m.user = request.user.username
-#         m.title = request.POST["create_title"]
-#         m.desc = request.POST["create_desc"]
-#         m.starting_bid = request.POST["create_initial_bid"]
-#         m.image_url = request.POST["img_url"]
-        
-#         # m = auctionlist(title = title, desc=desc, starting_bid = starting_bid, image_url = image_url, category = category)
-#         m.save()
-#         return redirect("index")
-#     return render(request, "auctions/create.html")
+
 
 
