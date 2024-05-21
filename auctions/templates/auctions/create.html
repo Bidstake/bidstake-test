@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Create Auction Listing</title>
+    <title>Create Listing</title>
 </head>
 <body>
-    <h1>Create Auction Listing</h1>
+    <h1>Create New Listing</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <label for="create_title">Title:</label>
-        <input type="text" id="create_title" name="create_title" required><br>
-
-        <label for="create_desc">Description:</label>
-        <textarea id="create_desc" name="create_desc" required></textarea><br>
-
-        <label for="create_initial_bid">Starting Bid:</label>
-        <input type="number" id="create_initial_bid" name="create_initial_bid" min="0" required><br>
-
-        <label for="img_file">Slideshow Images:</label>
-        <input type="file" id="img_file" name="img_file" accept="image/*" multiple required><br>
-
-        <label for="category">Category:</label>
-        <input type="text" id="category" name="category" required><br>
-
-        <button type="submit">Create Listing</button>
+        <p>
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+        </p>
+        <p>
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea>
+        </p>
+        <p>
+            <label for="starting_bid">Starting Bid:</label>
+            <input type="number" id="starting_bid" name="starting_bid" step="0.01" required>
+        </p>
+        <p>
+            <label for="image">Image:</label>
+            <input type="file" id="image" name="image">
+        </p>
+        <button type="submit">Create</button>
     </form>
+    <a href="{% url 'products' %}">Back to Listings</a>
 </body>
 </html>

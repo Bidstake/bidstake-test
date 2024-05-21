@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import *
 from django.contrib.auth.decorators import login_required
+from decimal import Decimal
 
 
 def index(request):
@@ -66,31 +67,42 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
-from django.utils.datastructures import MultiValueDict
-from .models import auctionlist
+
 def create(request):
     return render(request, 'auctions/create.html')
 @login_required(login_url='login')
 def create(request):
-    if request.method == "POST":
-        m = auctionlist()
-        m.user = request.user.username
-        m.title = request.POST["create_title"]
-        m.desc = request.POST["create_desc"]
-        m.starting_bid = request.POST["create_initial_bid"]
-        m.category = request.POST["category"]
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        starting_bid = request.POST.get('starting_bid')
+        image = request.FILES.get('image')
+        if title and description and starting_bid:
+            starting_bid = Decimal(starting_bid)
+            listing = Listing(title=title, description=description, starting_bid=starting_bid, image=image, user=request.user)
+            listing.save()
+        return redirect('products')
+            
 
-        #slideshow images
-        image_files = request.FILES.getlist('img_file')
-        m.image_url = [image_file.name for image_file in image_files]
+    return render(request, 'auctions/create.html')
+def products(request):
+    # Retrieve all listings from the database
+    listings = Listing.objects.all()
 
-        m.save()
+    # Pass the listings data to the template
+    return render(request, 'auctions/products.html', {'listings': listings})
+# def create(request):
+#     if request.method == "POST":
+#         m = auctionlist()
+#         m.user = request.user.username
+#         m.title = request.POST["create_title"]
+#         m.desc = request.POST["create_desc"]
+#         m.starting_bid = request.POST["create_initial_bid"]
+#         m.image_url = request.POST["img_url"]
+        
+#         # m = auctionlist(title = title, desc=desc, starting_bid = starting_bid, image_url = image_url, category = category)
+#         m.save()
+#         return redirect("index")
+#     return render(request, "auctions/create.html")
 
-        # Save images to server
-        for image_file in image_files:
-            with open(f'media/{image_file.name}', 'wb+') as destination:
-                for chunk in image_file.chunks():
-                    destination.write(chunk)
 
-        return redirect("products")
-    return render(request, "auctions/create.html")
