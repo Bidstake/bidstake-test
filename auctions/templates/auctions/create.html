@@ -2,11 +2,43 @@
 <html>
 <head>
     <title>Create Listing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 </head>
+<style>
+    h1{
+        font-family: Inter, sans-serif;
+        color: rgb(255, 68, 0);
+        font-size: 50px;
+        margin-top: 0%;
+        margin-left: 0%;
+        background-color: aqua;
+    }
+
+    .form{
+        margin-top: 2%;
+        margin-left: 50%;
+        font-family: Inter, sans-serif;
+        background-color: rgb(230, 118, 118);
+
+
+    }
+    .image-upload{
+        margin-top:-14.5%;
+    }
+
+    
+
+</style>
 <body>
-    <h1>Create New Listing</h1>
+    
+    <h1>Create New Listing!!!</h1>
+    
+    
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        <div class="form">
+            <h3 style="font-size: 40px; font-family:Inter, sans-serif; ">Update Property Info</h3>
         <p>
             <label for="title">Title:</label>
             <input type="text" id="title" name="title" required>
@@ -19,12 +51,17 @@
             <label for="starting_bid">Starting Bid:</label>
             <input type="number" id="starting_bid" name="starting_bid" step="0.01" required>
         </p>
+        </div>
+        <div class="image-upload">
+        <h3 style="font-size: 40px; font-family:Inter, sans-serif; ">Upload Photo's</h3>
+        
         <p>
             <label for="image">Image:</label>
             <input type="file" id="image" name="image">
         </p>
+        </div>
         <button type="submit">Create</button>
     </form>
-    <a href="{% url 'all_listings' %}">Back to Listings</a>
+    <a href="{% url 'products' %}">Back to Listings</a>
 </body>
 </html>
