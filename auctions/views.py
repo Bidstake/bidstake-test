@@ -70,6 +70,7 @@ def register(request):
 
 def create(request):
     return render(request, 'auctions/create.html')
+@login_required(login_url='login')
 def create(request):
     if request.method == 'POST':
         title = request.POST.get('title')
