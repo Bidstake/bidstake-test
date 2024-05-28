@@ -15,4 +15,5 @@ urlpatterns = [
     # path("products", views.products, name="products"),
     path('auctions/', views.products, name='products'),
     path("create", views.create, name="create"),
+    path('bid/<int:listing_id>/', views.bid, name='bid'),
 ]
