@@ -6,7 +6,7 @@ from django.urls import reverse
 from .models import *
 from django.contrib.auth.decorators import login_required
 from decimal import Decimal, InvalidOperation
-
+from django.http import JsonResponse
 
 def index(request):
     return render(request, 'auctions/index.html')
@@ -116,6 +116,9 @@ def bid(request, listing_id):
     bids = Bid.objects.filter(listing=listing).order_by('-bid_time')
 
     if request.method == 'POST':
+        if request.user == listing.user:
+            return JsonResponse({'error': "You can't bid on your own item."}, status=400)
+
         bid_amount_str = request.POST.get('bid_amount')
         try:
             bid_amount = Decimal(bid_amount_str)
@@ -127,15 +130,10 @@ def bid(request, listing_id):
             })
 
         if bid_amount > listing.current_bid and bid_amount >= listing.starting_bid:
-            # Update current bid amount for the listing
             listing.current_bid = bid_amount
             listing.save()
-
-            # Create a new Bid instance
             bid = Bid(listing=listing, bidder=request.user, bid_amount=bid_amount)
             bid.save()
-
-            # Redirect to the bid page for the same listing
             return redirect('bid', listing_id=listing.id)
         else:
             return render(request, 'auctions/bid.html', {
@@ -149,3 +147,32 @@ def bid(request, listing_id):
         'bids': bids
     }
     return render(request, 'auctions/bid.html', context)
+
+# @login_required
+# def message_bidder(request, listing_id, bidder_id):
+#     listing = get_object_or_404(Listing, id=listing_id)
+#     bidder = get_object_or_404(User, id=bidder_id)
+
+#     if request.method == 'POST':
+#         message_content = request.POST.get('message')
+#         if message_content:
+#             message = Message(sender=request.user, receiver=bidder, listing=listing, message=message_content)
+#             message.save()
+#             return redirect('view_messages', listing_id=listing.id)
+
+#     context = {
+#         'listing': listing,
+#         'bidder': bidder
+#     }
+#     return render(request, 'auctions/message_bidder.html', context)
+
+# @login_required
+# def view_messages(request, listing_id):
+#     listing = get_object_or_404(Listing, id=listing_id)
+#     messages = Message.objects.filter(listing=listing, sender=request.user).order_by('-sent_at')
+
+#     context = {
+#         'listing': listing,
+#         'messages': messages
+#     }
+#     return render(request, 'auctions/view_messages.html', context)
