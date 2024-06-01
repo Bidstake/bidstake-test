@@ -20,17 +20,21 @@
             align-items: center;
             min-height: 100vh;
             background: #fcccb0;
-            overflow-y: auto; /* Enable vertical scrolling */
+            overflow: auto; /* Allow scrolling */
+            position: relative;
         }
         section 
         {
             width: 100vw;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 2px;
+            position: absolute;
+            top: 0;
+            left: 0;
             flex-wrap: wrap;
-            overflow: hidden;
+            z-index: 1;
         }
         section::before 
         {
@@ -40,6 +44,7 @@
             height: 100%;
             background: linear-gradient(#ffffff,#ff4400,#ffffff);
             animation: animate 5s linear infinite;
+            z-index: -1;
         }
         @keyframes animate 
         {
@@ -62,29 +67,30 @@
             z-index: 2;
             transition: 1.5s;
             border-radius: 5px;
+            margin: 1px;
         }
         section span:hover 
         {
             background: #ff4400;
             transition: 0s;
         }
-        section .signin
+        .signin
         {
-            position:fixed;
-            width: 600px;
-            background: #ffffffef;  
-            z-index: 1000;
+            position: relative;
+            width: 100%;
+            max-width: 1400px;
+            background: #6e6666ef;  
+            z-index: 3;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,9);
-            opacity: 100%;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.9);
+            margin-top: 30px;
         }
-        section .signin .content 
+        .signin .content 
         {
-            position: relative;
             width: 100%;
             display: flex;
             justify-content: center;
@@ -92,38 +98,37 @@
             flex-direction: column;
             gap: 40px;
         }
-        section .signin .content h2 
+        .signin .content h2 
         {
             font-size: 2em;
             color: #ff4400;
             text-transform: uppercase;
         }
-        section .signin .content .form 
+        .signin .content .form 
         {
             width: 100%;
             display: flex;
             flex-direction: column;
             gap: 25px;
         }
-        section .signin .content .form .inputBox
+        .signin .content .form .inputBox
         {
             position: relative;
             width: 100%;
         }
-        section .signin .content .form .inputBox input 
+        .signin .content .form .inputBox input, .signin .content .form .inputBox textarea, .signin .content .form .inputBox select 
         {
-            position: relative;
             width: 100%;
             background: #333;
             border: none;
             outline: none;
-            padding: 25px 10px 7.5px;
+            padding: 15px 10px;
             border-radius: 4px;
             color: #fff;
             font-weight: 500;
             font-size: 1em;
         }
-        section .signin .content .form .inputBox i 
+        .signin .content .form .inputBox i 
         {
             position: absolute;
             left: 0;
@@ -134,7 +139,9 @@
             pointer-events: none;
         }
         .signin .content .form .inputBox input:focus ~ i,
-        .signin .content .form .inputBox input:valid ~ i
+        .signin .content .form .inputBox input:valid ~ i,
+        .signin .content .form .inputBox textarea:focus ~ i,
+        .signin .content .form .inputBox textarea:valid ~ i
         {
             transform: translateY(-7.5px);
             font-size: 0.8em;
@@ -160,7 +167,7 @@
         .signin .content .form .inputBox input[type="submit"]
         {
             padding: 10px;
-            background: #0f0;
+            background: rgb(207, 85, 29);
             color: #000;
             font-weight: 600;
             font-size: 1.35em;
@@ -187,13 +194,36 @@
                 height: calc(20vw - 2px);
             }
         }
+        .image-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
         .image-preview img {
-            max-width: 100%;
+            max-width: 400px;
             height: auto;
             border: 1px solid #ccc;
             border-radius: 4px;
             padding: 5px;
-            margin-top: 10px;
+            display: none; /* Hide by default */
+        }
+        .create-list{
+            background-color: #000;
+            transition: background-color 0.3s, color 0.3s;
+            color: #ffffff
+            display: block; 
+            width: 100%; 
+            padding: 10px; 
+            font-size: 20px; 
+            
+            border: none; border-radius: 4px; cursor: pointer; margin-top: 20px;
+        }
+        .create-list:hover{
+            background-color: #ff4400;
+            color: #000;
+            font-size: 20px;
         }
     </style>
 </head>
@@ -208,59 +238,92 @@
         <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
         <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
         <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
-        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
-         
-        <div class="signin">
-            <div class="content">
-                <h2>Create New Listing!!!</h2>
-                <div class="form">
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="form">
-                            <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
-                                <label for="title" style="flex: 1; margin-right: 10px;">Title of the Property:</label>
-                                <input type="text" id="title" name="title" required style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;">
-                            </p>
-                            <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
-                                <label for="description" style="flex: 1; margin-right: 10px;">Description:</label>
-                                <textarea id="description" name="description" required style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
-                            </p>
-                            <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
-                                <label for="starting_bid" style="flex: 1; margin-right: 10px;">Starting Bid:</label>
-                                <input type="number" id="starting_bid" name="starting_bid" step="0.01" required style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;">
-                            </p>
-                            <br>
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
+    </section>
+    <div class="signin">
+        <div class="content">
+            <h2>Create New Listing!!!</h2>
+            <div class="form">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form">
+                        <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
+                            <label for="title" style="flex: 1; margin-right: 10px;">Title of the Property:</label>
+                            <input type="text" id="title" name="title" required style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;">
+                        </p>
+                        <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
+                            <label for="description" style="flex: 1; margin-right: 10px;">Description:</label>
+                            <textarea id="description" name="description" required maxlength="100" style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px; resize: none; height: 100px;"></textarea>
+                        </p>
+                        <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
+                            <label for="starting_bid" style="flex: 1; margin-right: 10px;">Starting Bid:</label>
+                            <input type="number" id="starting_bid" name="starting_bid" step="0.01" required style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;">
+                        </p>
+                        <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
+                            <label for="address" style="flex: 1; margin-right: 10px;">Address:</label>
+                            <input type="text" id="address" name="address" required style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;">
+                        </p>
+                        <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
+                            <label for="size" style="flex: 1; margin-right: 10px;">Property Size:</label>
+                            <input type="text" id="size" name="size" required style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;">
+                        </p>
+                        <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
+                            <label for="year_built" style="flex: 1; margin-right: 10px;">Year Built:</label>
+                            <input type="number" id="year_built" name="year_built" required style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;">
+                        </p>
+                        <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
+                            <label for="amenities" style="flex: 1; margin-right: 10px;">Amenities:</label>
+                            <textarea id="amenities" name="amenities" required maxlength="100" style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px; resize: none; height: 100px;"></textarea>
+                        </p>
+                        <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
+                            <label for="auction_end" style="flex: 1; margin-right: 10px;">Auction End Date & Time:</label>
+                            <input type="datetime-local" id="auction_end" name="auction_end" required style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;">
+                        </p>
+                    </div>
+                    <div class="image-upload">
+                        <h3 style="font-size: 30px; font-family: Inter, sans-serif;">Upload Photos</h3>
+                        <br>
+                        <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
+                            <label for="image" style="flex: 1; margin-right: 10px;">Images:</label>
+                            <input type="file" id="image" name="image" accept="image/*" multiple style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;" onchange="previewImages(event)">
+                        </p>
+                        <div class="image-preview" id="imagePreview">
+                            <!-- Multiple image previews will be inserted here -->
                         </div>
-                        <div class="image-upload">
-                            <h3 style="font-size: 30px; font-family: Inter, sans-serif;">Upload Photo's</h3>
-                            <br>
-                            <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
-                                <label for="image" style="flex: 1; margin-right: 10px;">Image:</label>
-                                <input type="file" id="image" name="image" accept="image/*" style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;" onchange="previewImage(event)">
-                            </p>
-                            <div class="image-preview" id="imagePreview">
-                                <img id="preview" src="" alt="Image Preview">
-                            </div>
-                        </div>
-                        <button type="submit" style="display: block; width: 100%; padding: 10px; font-size: 20px; color: #fff; background-color: #4CAF50; border: none; border-radius: 4px; cursor: pointer; margin-top: 20px;">Create</button>
-                    </form>
-                    <a href="{% url 'products' %}">Back to Listings</a>
-                </div>
+                    </div>
+                    <button type="submit" class="create-list">Create</button>
+                </form>
+                <a href="{% url 'products' %}">Back to Listings</a>
             </div>
         </div>
-    </section>
+    </div>
     <script>
-        function previewImage(event) {
-            const image = document.getElementById('preview');
-            const file = event.target.files[0];
-            const reader = new FileReader();
-            reader.onload = function() {
-                image.src = reader.result;
-            };
-            if (file) {
-                reader.readAsDataURL(file);
-            } else {
-                image.src = '';
+        function previewImages(event) {
+            const imagePreviewContainer = document.getElementById('imagePreview');
+            imagePreviewContainer.innerHTML = ''; // Clear previous previews
+
+            const files = event.target.files;
+            if (files.length > 0) {
+                for (const file of files) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.style.display = 'block'; // Show the image
+                        imagePreviewContainer.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
             }
         }
     </script>
