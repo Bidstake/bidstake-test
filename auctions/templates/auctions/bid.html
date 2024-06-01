@@ -1,10 +1,10 @@
-<!-- bid.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- Add your head content here -->
 </head>
 <body>
+    {% csrf_token %}
     <h1>Bid on Listing</h1>
     <h2>{{ listing.title }}</h2>
     <p>Description: {{ listing.description }}</p>
@@ -13,7 +13,7 @@
     <p>Address: {{ listing.address }}</p>
     <p>Size: {{ listing.size }}</p>
     <p>Year Built: {{ listing.year_built }}</p>
-    <p>tags: {{ listing.tags }}</p>
+    <p>Tags: {{ listing.tags }}</p>
     <h3>Photos:</h3>
     <div class="image-preview">
         {% for image in listing.images.all %}
@@ -26,5 +26,23 @@
         <input type="number" id="bid_amount" name="bid_amount" step="0.01" required>
         <button type="submit">Place Bid</button>
     </form>
+    
+    <h2>Bid History</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Bidder Name</th>
+                <th>Bid Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bid in bids %}
+            <tr>
+                <td>{{ bid.bidder.username }}</td>
+                <td>${{ bid.bid_amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
