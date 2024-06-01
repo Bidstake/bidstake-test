@@ -285,21 +285,23 @@
                             <label for="year_built" style="flex: 1; margin-right: 10px;">Year Built:</label>
                             <input type="number" id="year_built" name="year_built" required style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;">
                         </p>
-                        <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
-                            <label for="amenities" style="flex: 1; margin-right: 10px;">Amenities:</label>
-                            <textarea id="amenities" name="amenities" required maxlength="100" style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px; resize: none; height: 100px;"></textarea>
-                        </p>
-                        <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
+
+                        <label for="tags">Tags:</label>
+                        <input type="text" id="tags-input">
+                        <div id="tags-container"></div>
+                        <input type="hidden" id="tags" name="tags"><br>
+
+                        <!-- <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
                             <label for="auction_end" style="flex: 1; margin-right: 10px;">Auction End Date & Time:</label>
                             <input type="datetime-local" id="auction_end" name="auction_end" required style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;">
-                        </p>
+                        </p> -->
                     </div>
                     <div class="image-upload">
                         <h3 style="font-size: 30px; font-family: Inter, sans-serif;">Upload Photos</h3>
                         <br>
                         <p style="display: flex; align-items: center; font-size: 25px; margin-bottom: 10px;">
                             <label for="image" style="flex: 1; margin-right: 10px;">Images:</label>
-                            <input type="file" id="image" name="image" accept="image/*" multiple style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;" onchange="previewImages(event)">
+                            <input type="file" id="images" name="images" accept="image/*" multiple style="flex: 2; padding: 5px; font-size: 20px; border: 1px solid #ccc; border-radius: 4px;" onchange="previewImages(event)">
                         </p>
                         <div class="image-preview" id="imagePreview">
                             <!-- Multiple image previews will be inserted here -->
@@ -330,6 +332,49 @@
                 }
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const tagsInput = document.getElementById('tags-input');
+            const tagsContainer = document.getElementById('tags-container');
+            const tagsHiddenInput = document.getElementById('tags');
+
+            tagsInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    const tagText = tagsInput.value.trim();
+                    if (tagText) {
+                        addTag(tagText);
+                        tagsInput.value = '';
+                    }
+                }
+            });
+
+            function addTag(tagText) {
+                const tag = document.createElement('span');
+                tag.classList.add('tag');
+                tag.textContent = tagText;
+
+                const removeButton = document.createElement('span');
+                removeButton.classList.add('remove-tag');
+                removeButton.textContent = 'x';
+                removeButton.addEventListener('click', function() {
+                    tagsContainer.removeChild(tag);
+                    updateHiddenInput();
+                });
+
+                tag.appendChild(removeButton);
+                tagsContainer.appendChild(tag);
+                updateHiddenInput();
+            }
+
+            function updateHiddenInput() {
+                const tags = [];
+                tagsContainer.querySelectorAll('.tag').forEach(function(tag) {
+                    tags.push(tag.textContent.slice(0, -1)); // Remove the 'x' from the tag text
+                });
+                tagsHiddenInput.value = tags.join(',');
+            }
+        });
     </script>
 </body>
 </html>

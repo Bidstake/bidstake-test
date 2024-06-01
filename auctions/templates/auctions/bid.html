@@ -1,40 +1,30 @@
+<!-- bid.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bid on {{ listing.title }}</title>
+    <!-- Add your head content here -->
 </head>
 <body>
-    <h1>Bid on {{ listing.title }}</h1>
+    <h1>Bid on Listing</h1>
+    <h2>{{ listing.title }}</h2>
     <p>Description: {{ listing.description }}</p>
-    <p>Starting Bid: ${{ listing.starting_bid }}</p>
-    <p>Current Bid: ${{ listing.current_bid }}</p>
-    {% if listing.image %}
-        <img src="{{ listing.image.url }}" alt="{{ listing.title }}" width="200">
-    {% endif %}
-    
-    <h2>Place a Bid</h2>
-    <form method="POST">
+    <p>Starting Bid: {{ listing.starting_bid }}</p>
+    <p>Current Bid: {{ listing.current_bid }}</p>
+    <p>Address: {{ listing.address }}</p>
+    <p>Size: {{ listing.size }}</p>
+    <p>Year Built: {{ listing.year_built }}</p>
+    <p>tags: {{ listing.tags }}</p>
+    <h3>Photos:</h3>
+    <div class="image-preview">
+        {% for image in listing.images.all %}
+        <img src="{{ image.image.url }}" alt="Listing Image">
+        {% endfor %}
+    </div>
+    <form method="post">
         {% csrf_token %}
-        <label for="bid_amount">Bid Amount: </label>
-        <input type="text" id="bid_amount" name="bid_amount">
+        <label for="bid_amount">Your Bid Amount:</label>
+        <input type="number" id="bid_amount" name="bid_amount" step="0.01" required>
         <button type="submit">Place Bid</button>
     </form>
-
-    {% if error_message %}
-        <p style="color: red;">{{ error_message }}</p>
-    {% endif %}
-
-    <h2>All Bids</h2>
-    <ul>
-        {% for bid in bids %}
-            <li>{{ bid.bidder.username }}: ${{ bid.bid_amount }} at {{ bid.bid_time }}</li>
-        {% empty %}
-            <li>No bids yet.</li>
-        {% endfor %}
-    </ul>
-
-    <a href="{% url 'products' %}">Back to Listings</a>
 </body>
 </html>

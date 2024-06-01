@@ -13,16 +13,22 @@ def index(request):
 
 def profile(request):
     return render(request, 'auctions/profile.html')
+
 def detail(request):
     return render(request, 'auctions/product-detail.html')
+
 def products(request):
     return render(request, 'auctions/products.html')
+
 def faq(request):
     return render(request, 'auctions/faq.html')
+
 def contact(request):
     return render(request, 'auctions/contact.html')
+
 def about(request):
     return render(request, 'auctions/about.html')
+
 # login
 def user_login(request):
     if request.method == "POST":
@@ -39,10 +45,10 @@ def user_login(request):
             })
     else:
         return render(request, "auctions/login.html")
+
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
-
 
 def register(request):
     if request.method == "POST":
@@ -61,22 +67,22 @@ def register(request):
             return render(request, "auctions/register.html", {
                 "message": "Username already taken."
             })
-        auth_login(request, user) 
+        auth_login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
 
-
-
-def create(request):
-    return render(request, 'auctions/create.html')
 @login_required(login_url='login')
 def create(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         description = request.POST.get('description')
         starting_bid = request.POST.get('starting_bid')
-        image = request.FILES.get('image')
+        address = request.POST.get('address')
+        size = request.POST.get('size')
+        year_built = request.POST.get('year_built')
+        tags = request.POST.get('tags', '').split(',')
+        images = request.FILES.getlist('images')
 
         try:
             starting_bid_decimal = Decimal(starting_bid)
@@ -90,24 +96,28 @@ def create(request):
                 title=title,
                 description=description,
                 starting_bid=starting_bid_decimal,
+                address=address,
+                size=size,
+                year_built=year_built,
                 current_bid=starting_bid_decimal,
-                image=image,
-                user=request.user
+                tags=tags,
+                user=request.user,
             )
-            listing.save()
+            listing.save()  # Save the Listing object first
+
+            for image in images:
+                ListingImage.objects.create(listing=listing, image=image)
+                print(f"Image {image} saved for listing {listing.id}")
+
             return redirect('products')
 
     return render(request, 'auctions/create.html')
-# def products(request):
-#     listings = Listing.objects.all()
 
-#     return render(request, 'auctions/products.html', {'listings': listings})
 def products(request):
     listings = Listing.objects.all()
     context = {
         'listings': listings
     }
-    # return render(request, 'auctions/products.html', {'listings': listings}
     return render(request, 'auctions/products.html', context)
 
 @login_required
@@ -147,32 +157,3 @@ def bid(request, listing_id):
         'bids': bids
     }
     return render(request, 'auctions/bid.html', context)
-
-# @login_required
-# def message_bidder(request, listing_id, bidder_id):
-#     listing = get_object_or_404(Listing, id=listing_id)
-#     bidder = get_object_or_404(User, id=bidder_id)
-
-#     if request.method == 'POST':
-#         message_content = request.POST.get('message')
-#         if message_content:
-#             message = Message(sender=request.user, receiver=bidder, listing=listing, message=message_content)
-#             message.save()
-#             return redirect('view_messages', listing_id=listing.id)
-
-#     context = {
-#         'listing': listing,
-#         'bidder': bidder
-#     }
-#     return render(request, 'auctions/message_bidder.html', context)
-
-# @login_required
-# def view_messages(request, listing_id):
-#     listing = get_object_or_404(Listing, id=listing_id)
-#     messages = Message.objects.filter(listing=listing, sender=request.user).order_by('-sent_at')
-
-#     context = {
-#         'listing': listing,
-#         'messages': messages
-#     }
-#     return render(request, 'auctions/view_messages.html', context)
