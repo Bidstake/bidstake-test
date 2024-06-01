@@ -1,40 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bid on {{ listing.title }}</title>
+    <title>Live Auctions</title>
+    <style>
+        /* Previous CSS part */
+        .auction-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px;
+            max-width: 600px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .auction-card img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .auction-card h2 {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+
+        .auction-card p {
+            margin: 5px 0;
+        }
+
+        .auction-card .bid-text {
+            color: #ff4400;
+        }
+
+        .auction-card .place-bid {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .auction-card input[type="text"],
+        .auction-card input[type="number"] {
+            width: calc(100% - 100px);
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .auction-card button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .auction-card button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Bid on {{ listing.title }}</h1>
-    <p>Description: {{ listing.description }}</p>
-    <p>Starting Bid: ${{ listing.starting_bid }}</p>
-    <p>Current Bid: ${{ listing.current_bid }}</p>
-    {% if listing.image %}
-        <img src="{{ listing.image.url }}" alt="{{ listing.title }}" width="200">
-    {% endif %}
-    
-    <h2>Place a Bid</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <label for="bid_amount">Bid Amount: </label>
-        <input type="text" id="bid_amount" name="bid_amount">
-        <button type="submit">Place Bid</button>
-    </form>
+    <div class="auction-card">
+        <img src="https://via.placeholder.com/600x300" alt="Product Image">
+        <h2>19th Century Manor House</h2>
+        <p class="bid-text">Starting Bid: $1,000,000</p>
+        <p class="bid-text">Current Bid: $1,250,000 (By John Doe)</p>
+        <p>Bid End Time: 00:00:00</p>
+        <button class="add-bid-button" onclick="openBidPopup()">+</button>
+    </div>
 
-    {% if error_message %}
-        <p style="color: red;">{{ error_message }}</p>
-    {% endif %}
+    <!-- Popup Form -->
+    <div id="bid-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-button" onclick="closeBidPopup()">&times;</span>
+            <!-- Your bid form here -->
+            <form id="bid-form">
+                <h2>Create a Similar Bid</h2>
+                <label for="bid_amount">Bid Amount:</label>
+                <input type="text" id="bid_amount" name="bid_amount" placeholder="Enter Bid Amount" oninput="formatBidAmount(this)">
+                <!-- Add more input fields for bid details if needed -->
+                <button type="submit">Place Bid</button>
+            </form>
+        </div>
+    </div>
 
-    <h2>All Bids</h2>
-    <ul>
-        {% for bid in bids %}
-            <li>{{ bid.bidder.username }}: ${{ bid.bid_amount }} at {{ bid.bid_time }}</li>
-        {% empty %}
-            <li>No bids yet.</li>
-        {% endfor %}
-    </ul>
+    <script>
+        // Open the bid popup
+        function openBidPopup() {
+            document.getElementById("bid-popup").style.display = "block";
+        }
 
-    <a href="{% url 'products' %}">Back to Listings</a>
+        // Close the bid popup
+        function closeBidPopup() {
+            document.getElementById("bid-popup").style.display = "none";
+        }
+
+        // Function to format bid amount with commas
+        function formatBidAmount(input) {
+            let value = input.value.replace(/,/g, '');
+            if (!isNaN(value) && value.length > 0) {
+                input.value = parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2 });
+            }
+        }
+    </script>
 </body>
+
 </html>
