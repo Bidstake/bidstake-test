@@ -16,8 +16,6 @@
         }
 
         .listing-card {
-            display: flex;
-            flex-direction: column; /* Arrange children in a column */
             position: relative; /* Make the card container relative */
             flex: 1 0 540px; /* Adjust card width as needed */
             border: 1px solid #ddd;
@@ -25,87 +23,48 @@
             margin: 15px;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Hide overflow for the slider button */
         }
 
-        .slideshow-container {
-            position: relative;
-            max-width: 100%;
-        }
-
-        .slides {
-            display: none;
-        }
-
-        .slides img {
+        .listing-card img {
+            display: none; /* Hide all images initially */
             width: 100%;
             height: 415px; /* Fixed height for the image */
             object-fit: cover; /* Maintain aspect ratio */
             border-radius: 5px 5px 0 0; /* Rounded corners only at the top */
+            transition: transform 0.3s; /* Smooth transition for hover effect */
         }
 
-        .prev, .next {
-            cursor: pointer;
+        .listing-card img:first-child {
+            display: block; /* Show only the first image initially */
+        }
+
+        .listing-card:hover img {
+            transform: scale(1.05); /* Enlarge image on hover */
+        }
+
+        .slider-button {
             position: absolute;
             top: 50%;
-            width: auto;
-            padding: 16px;
-            margin-top: -22px;
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
-            transition: 0.6s ease;
-            border-radius: 0 3px 3px 0;
-            user-select: none;
-        }
-
-        .next {
-            right: 0;
-            border-radius: 3px 0 0 3px;
-        }
-
-        .prev {
-            left: 0;
-        }
-
-        .dot-container {
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 20px;
+            line-height: 40px;
             text-align: center;
-            padding: 10px 0;
-            background: rgba(0,0,0,0.5);
-        }
-
-        .dot {
-            cursor: pointer;
-            height: 15px;
-            width: 15px;
-            margin: 0 2px;
-            background-color: #bbb;
             border-radius: 50%;
-            display: inline-block;
-            transition: background-color 0.6s ease;
+            cursor: pointer;
+            transition: opacity 0.3s; /* Smooth transition for hover effect */
+            opacity: 0; /* Initially hidden */
         }
 
-        .active, .dot:hover {
-            background-color: #717171;
-        }
-
-        .listing-details {
-            padding: 15px;
-        }
-
-        .listing-details h2 {
-            font-size: 3.9em;
-            margin-bottom: 60px;
-            font-weight: bold; /* Make the title bold */
-        }
-
-        .listing-details p {
-            margin: 10px 0;
-            font-weight: bold; /* Make the description, Starting Bid, and Current Bid bold */
-            font-size: 1.5em; /* Increase font size */
+        .listing-card:hover .slider-button {
+            opacity: 1; /* Show button on hover */
         }
 
         .button-container {
-            margin-top: auto; /* Push the button container to the bottom */
             display: flex;
             justify-content: center; /* Center the button horizontally */
             padding: 15px;
@@ -132,6 +91,14 @@
             background-color: #ff4400; /* Hover background color */
             color: white; /* Hover text color */
         }
+        .slider-button.left {
+    left: 10px;
+}
+
+    .slider-button.right {
+    right: 10px;
+}
+
     </style>
 </head>
 <body>
@@ -139,31 +106,11 @@
     <div class="listing-container">
         {% for listing in listings %}
             <div class="listing-card">
-                {% if listing.images.all %}
-                    <div class="slideshow-container">
-                        {% for image in listing.images.all %}
-                        <div class="slides">
-                            <img src="{{ image.image.url }}" alt="{{ listing.title }}">
-                        </div>
-                        {% endfor %}
-                        <!-- Next and previous buttons -->
-                        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-                        <a class="next" onclick="plusSlides(1)">&#10095;</a>
-                    </div>
-                    <br>
-                    <!-- The dots/circles -->
-                    <div class="dot-container">
-                        {% for image in listing.images.all %}
-                        <span class="dot" onclick="currentSlide({{ forloop.counter }})"></span>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <div class="listing-details">
-                    <h2>{{ listing.title }}</h2>
-                    <p>{{ listing.description }}</p>
-                    <p><strong>Starting Bid:</strong> ${{ listing.starting_bid }}</p>
-                    <p><strong>Current Bid:</strong> ${{ listing.current_bid }}</p>
-                </div>
+                {% for image in listing.images.all %}
+                    <img src="{{ image.image.url }}" alt="Listing Image" class="listing-image">
+                {% endfor %}
+                <div class="slider-button left" onclick="prevImage(this)">❮</div>
+                <div class="slider-button right" onclick="nextImage(this)">❯</div>
                 <div class="button-container">
                     <a href="{% url 'bid' listing.id %}" class="view-bid-button">View and Bid</a>
                 </div>
@@ -175,31 +122,24 @@
     <a href="{% url 'create' %}">Create New Listing</a>
 
     <script>
-        let slideIndex = 1;
-        showSlides(slideIndex);
+        function nextImage(button) {
+            const card = button.parentNode;
+            const images = card.querySelectorAll('.listing-image');
+            const currentIndex = Array.from(images).findIndex(img => img.style.display !== 'none');
+            const nextIndex = (currentIndex + 1) % images.length;
 
-        function plusSlides(n) {
-            showSlides(slideIndex += n);
+            images[currentIndex].style.display = 'none';
+            images[nextIndex].style.display = 'block';
         }
 
-        function currentSlide(n) {
-            showSlides(slideIndex = n);
-        }
+        function prevImage(button) {
+            const card = button.parentNode;
+            const images = card.querySelectorAll('.listing-image');
+            const currentIndex = Array.from(images).findIndex(img => img.style.display !== 'none');
+            const prevIndex = (currentIndex - 1 + images.length) % images.length;
 
-        function showSlides(n) {
-            let i;
-            let slides = document.getElementsByClassName("slides");
-            let dots = document.getElementsByClassName("dot");
-            if (n > slides.length) {slideIndex = 1}
-            if (n < 1) {slideIndex = slides.length}
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-            for (i = 0; i < dots.length; i++) {
-                dots[i].className = dots[i].className.replace(" active", "");
-            }
-            slides[slideIndex-1].style.display = "block";
-            dots[slideIndex-1].className += " active";
+            images[currentIndex].style.display = 'none';
+            images[prevIndex].style.display = 'block';
         }
     </script>
 </body>
