@@ -1,13 +1,14 @@
+
 [Unit]
 Description=gunicorn daemon
-
+Requires=gunicorn.socket
+After=network.target
 [Service]
-Type=simple
 User=ubuntu
-Group=ubuntu
+Group=www-data
 WorkingDirectory=/home/ubuntu/bidstake-test
-ExecStart=/usr/bin/gunicorn --bind 0.0.0.0:8000 gunicorn.wsgi:application
-Restart=always
+ExecStart=/home/ubuntu/env/bin/gunicorn --access-logfile - --workers 3 --bind unix:/home/ubuntu/bidstake-test/auctionprop/auctionprop.sock auctionprop.wsgi:application
 
+       
 [Install]
 WantedBy=multi-user.target
