@@ -6,7 +6,7 @@ Type=simple
 User=ubuntu
 Group=ubuntu
 WorkingDirectory=/home/ubuntu/bidstake-test
-ExecStart=/usr/bin/python/home/ubuntu/bidstake-test/manage.py runserver 0.0.0.0:8000
+ExecStart=/usr/bin/gunicorn --bind 0.0.0.0:8000 gunicorn.wsgi:application
 Restart=always
 
 [Install]
