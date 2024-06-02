@@ -85,10 +85,10 @@ WSGI_APPLICATION = 'auctionprop.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bidstakedb1',
+        'NAME': 'bidstake',
         'USER': 'admin',
         'PASSWORD': 'Bidstake123',
-        'HOST': 'bidstakedb1.cjcuk24mq364.ap-south-1.rds.amazonaws.com',  # e.g., mydb-instance.abcdefg123456.us-west-2.rds.amazonaws.com
+        'HOST': 'bidstake.cjcuk24mq364.ap-south-1.rds.amazonaws.com', 
         'PORT': '3306',
     }
 }
