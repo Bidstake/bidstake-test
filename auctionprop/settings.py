@@ -141,4 +141,5 @@ TWO_FACTOR_API_KEY = 'ce3c32f7-2037-11ef-8b60-0200cd936042'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
