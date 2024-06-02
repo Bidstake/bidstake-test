@@ -59,6 +59,14 @@
             border-radius: 5px;
         }
 
+        form input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
         form button {
             padding: 10px 20px;
             border: none;
@@ -95,12 +103,12 @@
         }
 
         .image-preview img {
-        max-width: 400px; /* Set the maximum width to 400px */
-        max-height: 200px; /* Set the maximum height to 200px */
-        width: auto; /* Allow the width to adjust proportionally */
-        height: auto; /* Allow the height to adjust proportionally */
-        display: block;
-        margin: 10px auto;
+            max-width: 400px; /* Set the maximum width to 400px */
+            max-height: 200px; /* Set the maximum height to 200px */
+            width: auto; /* Allow the width to adjust proportionally */
+            height: auto; /* Allow the height to adjust proportionally */
+            display: block;
+            margin: 10px auto;
         }
 
     </style>
@@ -128,7 +136,7 @@
         <form method="post">
             {% csrf_token %}
             <label for="bid_amount">Your Bid Amount:</label>
-            <input type="number" id="bid_amount" name="bid_amount" step="10000" min="100000" required>
+            <input type="text" id="bid_amount" name="bid_amount" required>
             <button type="submit">Place Bid</button>
         </form>
         <h2>Bid History</h2>
@@ -149,5 +157,13 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        document.getElementById('bid_amount').addEventListener('input', function(evt) {
+            let value = evt.target.value.replace(/[,₹]/g, '');
+            value = parseFloat(value).toLocaleString('en-IN');
+            evt.target.value = '₹ ' + value;
+        });
+    </script>
 </body>
 </html>
