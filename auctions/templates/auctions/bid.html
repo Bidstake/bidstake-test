@@ -51,14 +51,7 @@
             margin: 20px 0;
         }
 
-        form input[type="number"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
+        form input[type="number"],
         form input[type="text"] {
             width: calc(100% - 22px);
             padding: 10px;
@@ -77,7 +70,8 @@
         }
 
         form button:hover {
-            background-color: #333;
+            background-color: #ff4400;
+            color: black;
         }
 
         table {
@@ -103,10 +97,10 @@
         }
 
         .image-preview img {
-            max-width: 400px; /* Set the maximum width to 400px */
-            max-height: 200px; /* Set the maximum height to 200px */
-            width: auto; /* Allow the width to adjust proportionally */
-            height: auto; /* Allow the height to adjust proportionally */
+            max-width: 400px;
+            max-height: 200px;
+            width: auto;
+            height: auto;
             display: block;
             margin: 10px auto;
         }
@@ -137,7 +131,7 @@
             {% csrf_token %}
             <label for="bid_amount">Your Bid Amount:</label>
             <input type="text" id="bid_amount" name="bid_amount" required>
-            <button type="submit">Place Bid</button>
+            <button type="submit"><bold>Place Bid</bold></button>
         </form>
         <h2>Bid History</h2>
         <table>
