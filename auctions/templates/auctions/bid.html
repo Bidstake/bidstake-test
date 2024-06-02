@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auction Listing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1, h2, h3 {
+            margin: 10px 0;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+        }
+
+        .time-left {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0;
+        }
+
+        form {
+            margin: 20px 0;
+        }
+
+        form input[type="number"],
+        form input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form button {
+            padding: 10px 20px;
+            border: none;
+            background-color: black;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        form button:hover {
+            background-color: #ff4400;
+            color: black;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .highest-bid {
+            color: red;
+            font-weight: bold;
+        }
+
+        .starting-bid {
+            color: green;
+            font-weight: bold;
+        }
+
+        .image-preview img {
+            max-width: 400px;
+            max-height: 200px;
+            width: auto;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>3 BHK, 1490 Sq. Ft., SECTOR 79, GURGAON</h1>
+        <p><strong>Highest Bid:</strong> <span class="highest-bid">₹ 80,00,000</span></p>
+        <p><strong>Starting Bid:</strong> <span class="starting-bid">₹ 77,37,000</span></p>
+        <p><strong>Address:</strong> 123 Main St</p>
+        <p><strong>Size:</strong> 2000 sq ft</p>
+        <p><strong>Year Built:</strong> 1990</p>
+        <p><strong>Tags:</strong> house, sale</p>
+        <h3>Photos:</h3>
+        <div class="image-preview">
+            <img src="image2.png" alt="Listing Image">
+        </div>
+        <h2>Time Left</h2>
+        <div class="time-left">
+            <div>2 Days</div>
+            <div>1 Hour</div>
+            <div>26 Mins</div>
+            <div>26 Secs</div>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <label for="bid_amount">Your Bid Amount:</label>
+            <input type="text" id="bid_amount" name="bid_amount" required>
+            <button type="submit"><bold>Place Bid</bold></button>
+        </form>
+        <h2>Bid History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Bidder Name</th>
+                    <th>Bid Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bid in bids %}
+                <tr>
+                    <td>{{ bid.bidder.username }}</td>
+                    <td>₹ {{ bid.bid_amount}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById('bid_amount').addEventListener('input', function(evt) {
+            let value = evt.target.value.replace(/[,₹]/g, '');
+            value = parseFloat(value).toLocaleString('en-IN');
+            evt.target.value = '₹ ' + value;
+        });
+    </script>
+</body>
+</html>
