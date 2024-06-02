@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-z^myg#pb6qz6pe@zzw+wct)&h^*#$@wcl+q34xh8)yzw05sc1f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['13.233.244.174']
+ALLOWED_HOSTS = ["52.66.207.110"]
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -74,23 +75,24 @@ WSGI_APPLICATION = 'auctionprop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bidstakedb1',
+        'USER': 'admin',
+        'PASSWORD': 'Bidstake123',
+        'HOST': 'bidstakedb1.cjcuk24mq364.ap-south-1.rds.amazonaws.com',  # e.g., mydb-instance.abcdefg123456.us-west-2.rds.amazonaws.com
+        'PORT': '3306',
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'bidstake_database',
-#         'USER': 'root',
-#         'PASSWORD': 'Rachit@123',
-#         'HOST': 'localhost',   # Or your MySQL server IP address
-#         'PORT': '3306',        # Default MySQL port
-#     }
-# }
 
 AUTH_USER_MODEL = 'auctions.User'
 
@@ -131,7 +133,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+TWO_FACTOR_API_KEY = 'ce3c32f7-2037-11ef-8b60-0200cd936042'
 
 
 # Default primary key field type
@@ -139,4 +141,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['localhost', '*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
