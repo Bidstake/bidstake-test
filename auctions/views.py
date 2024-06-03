@@ -126,8 +126,6 @@ def bid(request, listing_id):
     bids = Bid.objects.filter(listing=listing).order_by('-bid_time')
 
     if request.method == 'POST':
-        if request.user == listing.user:
-            return JsonResponse({'error': "You can't bid on your own item."}, status=400)
 
         bid_amount_str = request.POST.get('bid_amount')
         try:

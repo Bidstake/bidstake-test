@@ -142,12 +142,13 @@
                 </tr>
             </thead>
             <tbody>
-                {% for bid in bids %}
-                <tr>
-                    <td>{{ bid.bidder.username }}</td>
-                    <td>₹ {{ bid.bid_amount}}</td>
-                </tr>
-                {% endfor %}
+                <ul>
+                    {% for bid in bids %}
+                        <li>{{ bid.bidder.username }}: ${{ bid.bid_amount }} at {{ bid.bid_time }}</li>
+                    {% empty %}
+                        <li>No bids yet.</li>
+                    {% endfor %}
+                </ul>
             </tbody>
         </table>
     </div>
