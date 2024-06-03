@@ -81,7 +81,7 @@ def create(request):
         address = request.POST.get('address')
         size = request.POST.get('size')
         year_built = request.POST.get('year_built')
-        tags = request.POST.get('tags', '').split(',')
+        tags = request.POST.get('tags', '')  # Store as comma-separated string
         images = request.FILES.getlist('images')
 
         try:
@@ -103,7 +103,7 @@ def create(request):
                 tags=tags,
                 user=request.user,
             )
-            listing.save() 
+            listing.save()
 
             for image in images:
                 ListingImage.objects.create(listing=listing, image=image)
@@ -125,8 +125,9 @@ def bid(request, listing_id):
     listing = get_object_or_404(Listing, id=listing_id)
     bids = Bid.objects.filter(listing=listing).order_by('-bid_time')
 
-    if request.method == 'POST':
+    tags = [tag.strip() for tag in listing.tags.split(',')] if listing.tags else []
 
+    if request.method == 'POST':
         bid_amount_str = request.POST.get('bid_amount')
         try:
             bid_amount = Decimal(bid_amount_str)
@@ -134,6 +135,7 @@ def bid(request, listing_id):
             return render(request, 'auctions/bid.html', {
                 'listing': listing,
                 'bids': bids,
+                'tags': tags,
                 'error_message': "Invalid bid amount. Please enter a valid number."
             })
 
@@ -147,11 +149,13 @@ def bid(request, listing_id):
             return render(request, 'auctions/bid.html', {
                 'listing': listing,
                 'bids': bids,
+                'tags': tags,
                 'error_message': "Your bid must be higher than the current bid and at least the starting bid."
             })
 
     context = {
         'listing': listing,
-        'bids': bids
+        'bids': bids,
+        'tags': tags,
     }
     return render(request, 'auctions/bid.html', context)

@@ -108,35 +108,35 @@
         .listing-container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-around; /* Adjust as needed */
+            justify-content: space-around;
         }
 
         .listing-card {
-            position: relative; /* Make the card container relative */
-            flex: 1 0 540px; /* Adjust card width as needed */
+            position: relative;
+            flex: 1 0 540px;
             border: 1px solid #ddd;
             border-radius: 5px;
             margin: 15px;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden; /* Hide overflow for the slider button */
+            overflow: hidden;
         }
 
         .listing-card img {
-            display: none; /* Hide all images initially */
+            display: none;
             width: 100%;
-            height: 415px; /* Fixed height for the image */
-            object-fit: cover; /* Maintain aspect ratio */
-            border-radius: 5px 5px 0 0; /* Rounded corners only at the top */
-            transition: transform 0.3s; /* Smooth transition for hover effect */
+            height: 415px;
+            object-fit: cover;
+            border-radius: 5px 5px 0 0;
+            transition: transform 0.3s;
         }
 
         .listing-card img:first-child {
-            display: block; /* Show only the first image initially */
+            display: block;
         }
 
         .listing-card:hover img {
-            transform: scale(1.05); /* Enlarge image on hover */
+            transform: scale(1.05);
         }
 
         .slider-button {
@@ -152,29 +152,46 @@
             text-align: center;
             border-radius: 50%;
             cursor: pointer;
-            transition: opacity 0.3s; /* Smooth transition for hover effect */
-            opacity: 0; /* Initially hidden */
+            transition: opacity 0.3s;
+            opacity: 0;
         }
 
         .listing-card:hover .slider-button {
-            opacity: 1; /* Show button on hover */
+            opacity: 1;
         }
 
         .button-container {
             display: flex;
-            justify-content: center; /* Center the button horizontally */
+            justify-content: center;
             padding: 15px;
         }
+
         .view-bid-button:hover {
-            background-color: #ff4400; /* Hover background color */
-            color: white; /* Hover text color */
+            background-color: #ff4400;
+            color: white;
         }
+
         .slider-button.left {
             left: 10px;
         }
 
         .slider-button.right {
             right: 10px;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -186,7 +203,13 @@
         <p><strong>Address:</strong> {{ listing.address }}</p>
         <p><strong>Size:</strong> {{ listing.size }} sq ft</p>
         <p><strong>Year Built:</strong> {{ listing.year_built }}</p>
-        <p><strong>Tags:</strong> {{ listing.tags }}</p>
+        <h3>Tags:</h3>
+        <div class="tags-container">
+            {% for tag in tags %}
+                <span class="tag">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        
         <h3>Photos:</h3>
         <div class="listing-card">
             {% for image in listing.images.all %}
@@ -202,7 +225,6 @@
             <input type="text" id="bid_amount" name="bid_amount" required>
             <button type="submit"><bold>Place Bid</bold></button>
         </form>
-
         <h2>Bid History</h2>
         <table>
             <thead>
@@ -216,7 +238,7 @@
                 {% for bid in bids %}
                     <tr>
                         <td>{{ bid.bidder.username }}</td>
-                        <td>₹ {{ bid.bid_amount }}</td>
+                        <td>${{ bid.bid_amount }}</td>
                         <td>{{ bid.bid_time }}</td>
                     </tr>
                 {% empty %}
@@ -226,31 +248,25 @@
                 {% endfor %}
             </tbody>
         </table>
-        
     </div>
 
     <script>
-        let currentImageIndex = 0;
-
-        function showImage(card, index) {
-            const images = card.querySelectorAll('.listing-image');
-            images.forEach((img, i) => {
-                img.style.display = i === index ? 'block' : 'none';
-            });
-        }
-
         function prevImage(button) {
-            const card = button.closest('.listing-card');
-            const images = card.querySelectorAll('.listing-image');
-            currentImageIndex = (currentImageIndex > 0) ? currentImageIndex - 1 : images.length - 1;
-            showImage(card, currentImageIndex);
+            let container = button.closest('.listing-card');
+            let images = container.querySelectorAll('.listing-image');
+            let visibleIndex = Array.from(images).findIndex(img => img.style.display === 'block');
+            images[visibleIndex].style.display = 'none';
+            visibleIndex = (visibleIndex - 1 + images.length) % images.length;
+            images[visibleIndex].style.display = 'block';
         }
 
         function nextImage(button) {
-            const card = button.closest('.listing-card');
-            const images = card.querySelectorAll('.listing-image');
-            currentImageIndex = (currentImageIndex + 1) % images.length;
-            showImage(card, currentImageIndex);
+            let container = button.closest('.listing-card');
+            let images = container.querySelectorAll('.listing-image');
+            let visibleIndex = Array.from(images).findIndex(img => img.style.display === 'block');
+            images[visibleIndex].style.display = 'none';
+            visibleIndex = (visibleIndex + 1) % images.length;
+            images[visibleIndex].style.display = 'block';
         }
 
         document.getElementById('bid_amount').addEventListener('input', function(evt) {
