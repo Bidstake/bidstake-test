@@ -223,7 +223,7 @@
             {% csrf_token %}
             <label for="bid_amount">Your Bid Amount:</label>
             <input type="text" id="bid_amount" name="bid_amount" required>
-            <button type="submit"><bold>Place Bid</bold></button>
+            <button type="submit"><strong>Place Bid</strong></button>
         </form>
         <h2>Bid History</h2>
         <table>
@@ -238,7 +238,7 @@
                 {% for bid in bids %}
                     <tr>
                         <td>{{ bid.bidder.username }}</td>
-                        <td>${{ bid.bid_amount }}</td>
+                        <td>₹{{ bid.bid_amount }}</td>
                         <td>{{ bid.bid_time }}</td>
                     </tr>
                 {% empty %}
@@ -271,8 +271,10 @@
 
         document.getElementById('bid_amount').addEventListener('input', function(evt) {
             let value = evt.target.value.replace(/[,₹]/g, '');
-            value = parseFloat(value).toLocaleString('en-IN');
-            evt.target.value = '₹ ' + value;
+            if (!isNaN(value)) {
+                value = parseFloat(value).toLocaleString('en-IN');
+                evt.target.value = '₹ ' + value;
+            }
         });
     </script>
 </body>

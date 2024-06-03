@@ -129,6 +129,7 @@ def bid(request, listing_id):
 
     if request.method == 'POST':
         bid_amount_str = request.POST.get('bid_amount')
+        bid_amount_str = bid_amount_str.replace('₹', '').replace(',', '').strip()  # Sanitize input
         try:
             bid_amount = Decimal(bid_amount_str)
         except InvalidOperation:
