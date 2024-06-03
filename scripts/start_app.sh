@@ -1,6 +1,6 @@
 #!/usr/bin/bash 
 
-sed -i 's/\[]/\["54.144.250.113"]/' /home/ubuntu/bidstake-test/auctionprop/settings.py
+sed -i 's/\[]/\["65.2.130.172"]/' /home/ubuntu/bidstake-test/auctionprop/settings.py
 
 python manage.py migrate 
 python manage.py makemigrations     
