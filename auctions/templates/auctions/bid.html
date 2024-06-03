@@ -105,55 +105,154 @@
             margin: 10px auto;
         }
 
+        .listing-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around; /* Adjust as needed */
+        }
+
+        .listing-card {
+            position: relative; /* Make the card container relative */
+            flex: 1 0 540px; /* Adjust card width as needed */
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 15px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Hide overflow for the slider button */
+        }
+
+        .listing-card img {
+            display: none; /* Hide all images initially */
+            width: 100%;
+            height: 415px; /* Fixed height for the image */
+            object-fit: cover; /* Maintain aspect ratio */
+            border-radius: 5px 5px 0 0; /* Rounded corners only at the top */
+            transition: transform 0.3s; /* Smooth transition for hover effect */
+        }
+
+        .listing-card img:first-child {
+            display: block; /* Show only the first image initially */
+        }
+
+        .listing-card:hover img {
+            transform: scale(1.05); /* Enlarge image on hover */
+        }
+
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 20px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: opacity 0.3s; /* Smooth transition for hover effect */
+            opacity: 0; /* Initially hidden */
+        }
+
+        .listing-card:hover .slider-button {
+            opacity: 1; /* Show button on hover */
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center; /* Center the button horizontally */
+            padding: 15px;
+        }
+        .view-bid-button:hover {
+            background-color: #ff4400; /* Hover background color */
+            color: white; /* Hover text color */
+        }
+        .slider-button.left {
+            left: 10px;
+        }
+
+        .slider-button.right {
+            right: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>3 BHK, 1490 Sq. Ft., SECTOR 79, GURGAON</h1>
-        <p><strong>Highest Bid:</strong> <span class="highest-bid">₹ 80,00,000</span></p>
-        <p><strong>Starting Bid:</strong> <span class="starting-bid">₹ 77,37,000</span></p>
-        <p><strong>Address:</strong> 123 Main St</p>
-        <p><strong>Size:</strong> 2000 sq ft</p>
-        <p><strong>Year Built:</strong> 1990</p>
-        <p><strong>Tags:</strong> house, sale</p>
+        <h1>{{ listing.title }}</h1>
+        <p><strong>Highest Bid:</strong> <span class="highest-bid">₹ {{ listing.current_bid }}</span></p>
+        <p><strong>Starting Bid:</strong> <span class="starting-bid">₹ {{ listing.starting_bid }}</span></p>
+        <p><strong>Address:</strong> {{ listing.address }}</p>
+        <p><strong>Size:</strong> {{ listing.size }} sq ft</p>
+        <p><strong>Year Built:</strong> {{ listing.year_built }}</p>
+        <p><strong>Tags:</strong> {{ listing.tags }}</p>
         <h3>Photos:</h3>
-        <div class="image-preview">
-            <img src="image2.png" alt="Listing Image">
+        <div class="listing-card">
+            {% for image in listing.images.all %}
+                <img src="{{ image.image.url }}" alt="Listing Image" class="listing-image">
+            {% endfor %}
+            <div class="slider-button left" onclick="prevImage(this)">❮</div>
+            <div class="slider-button right" onclick="nextImage(this)">❯</div>
         </div>
-        <h2>Time Left</h2>
-        <div class="time-left">
-            <div>2 Days</div>
-            <div>1 Hour</div>
-            <div>26 Mins</div>
-            <div>26 Secs</div>
-        </div>
+
         <form method="post">
             {% csrf_token %}
             <label for="bid_amount">Your Bid Amount:</label>
             <input type="text" id="bid_amount" name="bid_amount" required>
             <button type="submit"><bold>Place Bid</bold></button>
         </form>
+
         <h2>Bid History</h2>
         <table>
             <thead>
                 <tr>
                     <th>Bidder Name</th>
                     <th>Bid Amount</th>
+                    <th>Bid Time</th>
                 </tr>
             </thead>
             <tbody>
-                <ul>
-                    {% for bid in bids %}
-                        <li>{{ bid.bidder.username }}: ${{ bid.bid_amount }} at {{ bid.bid_time }}</li>
-                    {% empty %}
-                        <li>No bids yet.</li>
-                    {% endfor %}
-                </ul>
+                {% for bid in bids %}
+                    <tr>
+                        <td>{{ bid.bidder.username }}</td>
+                        <td>₹ {{ bid.bid_amount }}</td>
+                        <td>{{ bid.bid_time }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3">No bids yet.</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
+        
     </div>
 
     <script>
+        let currentImageIndex = 0;
+
+        function showImage(card, index) {
+            const images = card.querySelectorAll('.listing-image');
+            images.forEach((img, i) => {
+                img.style.display = i === index ? 'block' : 'none';
+            });
+        }
+
+        function prevImage(button) {
+            const card = button.closest('.listing-card');
+            const images = card.querySelectorAll('.listing-image');
+            currentImageIndex = (currentImageIndex > 0) ? currentImageIndex - 1 : images.length - 1;
+            showImage(card, currentImageIndex);
+        }
+
+        function nextImage(button) {
+            const card = button.closest('.listing-card');
+            const images = card.querySelectorAll('.listing-image');
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            showImage(card, currentImageIndex);
+        }
+
         document.getElementById('bid_amount').addEventListener('input', function(evt) {
             let value = evt.target.value.replace(/[,₹]/g, '');
             value = parseFloat(value).toLocaleString('en-IN');

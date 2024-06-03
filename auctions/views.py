@@ -103,7 +103,7 @@ def create(request):
                 tags=tags,
                 user=request.user,
             )
-            listing.save()  # Save the Listing object first
+            listing.save() 
 
             for image in images:
                 ListingImage.objects.create(listing=listing, image=image)
@@ -120,7 +120,7 @@ def products(request):
     }
     return render(request, 'auctions/products.html', context)
 
-@login_required
+@login_required(login_url='login')
 def bid(request, listing_id):
     listing = get_object_or_404(Listing, id=listing_id)
     bids = Bid.objects.filter(listing=listing).order_by('-bid_time')
