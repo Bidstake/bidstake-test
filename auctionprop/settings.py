@@ -25,7 +25,6 @@ SECRET_KEY = 'django-insecure-z^myg#pb6qz6pe@zzw+wct)&h^*#$@wcl+q34xh8)yzw05sc1f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -75,23 +74,23 @@ WSGI_APPLICATION = 'auctionprop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'bidstake',
-#         'USER': 'admin',
-#         'PASSWORD': 'Bidstake123',
-#         'HOST': 'bidstake.cjcuk24mq364.ap-south-1.rds.amazonaws.com', 
-#         'PORT': '3306',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bidstake',
+        'USER': 'admin',
+        'PASSWORD': 'Bidstake123',
+        'HOST': 'bidstake.cjcuk24mq364.ap-south-1.rds.amazonaws.com', 
+        'PORT': '3306',
+    }
+}
 
 
 AUTH_USER_MODEL = 'auctions.User'
@@ -143,5 +142,5 @@ TWO_FACTOR_API_KEY = 'ce3c32f7-2037-11ef-8b60-0200cd936042'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-# ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
