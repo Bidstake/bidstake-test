@@ -7,7 +7,7 @@ from .models import *
 from django.contrib.auth.decorators import login_required
 from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
-
+import requests
 def index(request):
     return render(request, 'auctions/index.html')
 
@@ -50,16 +50,56 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
+# def register(request):
+#     if request.method == "POST":
+#         username = request.POST["username"]
+#         phone = request.POST["phone"]
+#         password = request.POST["password"]
+#         confirmation = request.POST["confirmation"]
+#         if password != confirmation:
+#             return render(request, "auctions/register.html", {
+#                 "message": "Passwords must match."
+#             })
+#         try:
+#             user = User.objects.create_user(username, phone, password)
+#             user.save()
+#         except IntegrityError:
+#             return render(request, "auctions/register.html", {
+#                 "message": "Username already taken."
+#             })
+#         auth_login(request, user)
+#         return HttpResponseRedirect(reverse("index"))
+#     else:
+#         return render(request, "auctions/register.html")
+
+API_KEY = 'ce3c32f7-2037-11ef-8b60-0200cd936042'
+
+
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         phone = request.POST["phone"]
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
+        otp = request.POST["otp"]  # Added OTP field
+        
         if password != confirmation:
             return render(request, "auctions/register.html", {
                 "message": "Passwords must match."
             })
+        
+
+        otp = int(request.POST["otp"])
+
+
+        otp_verify_url = f"https://2factor.in/API/V1/{API_KEY}/SMS/VERIFY/{phone}/{otp}"
+        response = requests.get(otp_verify_url)
+        otp_verification_status = response.json()
+        # if otp_verification_status["Status"] != "Success":
+        #     return render(request, "auctions/register.html", {
+        #         "message": "Invalid OTP. Please enter the correct OTP."
+        #     })
+
         try:
             user = User.objects.create_user(username, phone, password)
             user.save()
@@ -67,11 +107,29 @@ def register(request):
             return render(request, "auctions/register.html", {
                 "message": "Username already taken."
             })
+        except Exception as e:
+            return render(request, "auctions/register.html", {
+                "message": f"An error occurred: {str(e)}"
+            })
+
         auth_login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+def send_otp(request):
+    if request.method == "GET":
+        phone = request.GET.get("phone")
+        # Send OTP using 2Factor.in API
+        otp_url = f"https://2factor.in/API/V1/{API_KEY}/SMS/{phone}/AUTOGEN"
+        response = requests.get(otp_url)
+        otp_data = response.json()
 
+        if otp_data["Status"] == "Success":
+            return HttpResponse("OTP sent successfully")
+        else:
+            # Log the error message for debugging
+            error_message = otp_data.get("Details", "Failed to send OTP")
+            return HttpResponse(f"Failed to send OTP: {error_message}")
 @login_required(login_url='login')
 def create(request):
     if request.method == 'POST':
@@ -81,7 +139,7 @@ def create(request):
         address = request.POST.get('address')
         size = request.POST.get('size')
         year_built = request.POST.get('year_built')
-        tags = request.POST.get('tags', '')  # Store as comma-separated string
+        tags = request.POST.get('tags', '') 
         images = request.FILES.getlist('images')
 
         try:

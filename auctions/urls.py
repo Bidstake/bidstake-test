@@ -16,4 +16,5 @@ urlpatterns = [
     path('auctions/', views.products, name='products'),
     path("create", views.create, name="create"),
     path('bid/<int:listing_id>/', views.bid, name='bid'),
+    path('send_otp/', views.send_otp, name='send_otp'),
 ]

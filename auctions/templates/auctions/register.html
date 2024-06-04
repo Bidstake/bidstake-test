@@ -236,6 +236,9 @@ button:hover span {
         <div class="shape"></div>
         <div class="shape"></div>
     </div> -->
+	{% if message %}
+    <div>{{ message }}</div>
+{% endif %}
     <svg version="1.1" id="home-anim" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 1820 1080" style="enable-background:new 0 0 1820 1080;" xml:space="preserve">A
 
@@ -455,9 +458,7 @@ button:hover span {
 </g>
 </svg>
 
-    {% if message %}
-    <div>{{ message }}</div>
-{% endif %}
+
     <form  action="{% url 'register' %}" method="post">
       {% csrf_token %}
         <h3>Register Here</h3>
@@ -468,10 +469,14 @@ button:hover span {
         <label for="password">Password</label>
         <input type="password" name="password" placeholder="Password" id="password">
         <label for="password">confirm Password</label>
-        <input type="password" name="confirmation" placeholder="Password" id="password">
+        <input type="password" name="confirmation" placeholder="Password" id="confirm">
 
         <label for="Phone">Phone Number</label>
         <input type="tel" name="phone" placeholder="Phone Number" id="Phone">
+
+		<label for="otp">OTP:</label>
+        <input type="text" id="otp" name="otp" required><br><br>
+        <button type="button" onclick="sendOTP()">Send OTP</button><br><br>
 
         <button class="btn btn-primary" type="submit" value="Register">Register</button>
             <!-- <div class="social">
@@ -481,6 +486,15 @@ button:hover span {
         </div> -->
     </form>
 
-
+	<script>
+		function sendOTP() {
+			var phone = document.getElementById("Phone");
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "/send_otp/?phone=" + phone.value, true);
+			xhr.send();
+			alert("OTP sent to your phone!");
+		}
+	</script>
+	
 </body>
 </html>
