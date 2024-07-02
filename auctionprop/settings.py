@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'auctionprop.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bidstake',
+        'NAME': 'bidstake1',
         'USER': 'admin',
         'PASSWORD': 'Bidstake123',
         'HOST': 'bidstake.cjcuk24mq364.ap-south-1.rds.amazonaws.com', 
@@ -142,5 +142,5 @@ TWO_FACTOR_API_KEY = 'ce3c32f7-2037-11ef-8b60-0200cd936042'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# ALLOWED_HOSTS = ['*']
