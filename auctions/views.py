@@ -6,7 +6,7 @@ from django.urls import reverse
 from .models import *
 from django.contrib.auth.decorators import login_required
 from decimal import Decimal, InvalidOperation
-from django.http import JsonResponse
+from django.core.exceptions import ValidationError
 import requests
 def index(request):
     return render(request, 'auctions/index.html')
@@ -83,10 +83,10 @@ def register(request):
         confirmation = request.POST["confirmation"]
         otp = request.POST["otp"]  # Added OTP field
         
-        if password != confirmation:
-            return render(request, "auctions/register.html", {
-                "message": "Passwords must match."
-            })
+        # if password != confirmation:
+        #     return render(request, "auctions/register.html", {
+        #         "message": "Passwords must match."
+        #     })
         
 
         otp = int(request.POST["otp"])
@@ -95,10 +95,11 @@ def register(request):
         otp_verify_url = f"https://2factor.in/API/V1/{API_KEY}/SMS/VERIFY/{phone}/{otp}"
         response = requests.get(otp_verify_url)
         otp_verification_status = response.json()
-        # if otp_verification_status["Status"] != "Success":
-        #     return render(request, "auctions/register.html", {
-        #         "message": "Invalid OTP. Please enter the correct OTP."
-        #     })
+        if otp_verification_status["Status"] != "Success":
+            print(otp_verification_status)
+            return render(request, "auctions/register.html", {
+                "message": "Invalid OTP. Please enter the correct OTP."
+            })
 
         try:
             user = User.objects.create_user(username, phone, password)
@@ -125,12 +126,15 @@ def send_otp(request):
         otp_data = response.json()
 
         if otp_data["Status"] == "Success":
+            print("status")
             return HttpResponse("OTP sent successfully")
+        
         else:
             # Log the error message for debugging
             error_message = otp_data.get("Details", "Failed to send OTP")
             return HttpResponse(f"Failed to send OTP: {error_message}")
 @login_required(login_url='login')
+
 def create(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -141,6 +145,8 @@ def create(request):
         year_built = request.POST.get('year_built')
         tags = request.POST.get('tags', '') 
         images = request.FILES.getlist('images')
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')
 
         try:
             starting_bid_decimal = Decimal(starting_bid)
@@ -149,7 +155,7 @@ def create(request):
                 'error_message': "Invalid starting bid amount. Please enter a valid number."
             })
 
-        if title and description and starting_bid:
+        if title and description and starting_bid and latitude and longitude:
             listing = Listing(
                 title=title,
                 description=description,
@@ -160,6 +166,8 @@ def create(request):
                 current_bid=starting_bid_decimal,
                 tags=tags,
                 user=request.user,
+                latitude=Decimal(latitude),
+                longitude=Decimal(longitude),
             )
             listing.save()
 
@@ -171,12 +179,53 @@ def create(request):
 
     return render(request, 'auctions/create.html')
 
-def products(request):
-    listings = Listing.objects.all()
-    context = {
-        'listings': listings
-    }
-    return render(request, 'auctions/products.html', context)
+
+# def create(request):
+#     if request.method == 'POST':
+#         title = request.POST.get('title')
+#         description = request.POST.get('description')
+#         starting_bid = request.POST.get('starting_bid')
+#         address = request.POST.get('address')
+#         size = request.POST.get('size')
+#         year_built = request.POST.get('year_built')
+#         tags = request.POST.get('tags', '') 
+#         images = request.FILES.getlist('images')
+
+#         try:
+#             starting_bid_decimal = Decimal(starting_bid)
+#         except InvalidOperation:
+#             return render(request, 'auctions/create.html', {
+#                 'error_message': "Invalid starting bid amount. Please enter a valid number."
+#             })
+
+#         if title and description and starting_bid:
+#             listing = Listing(
+#                 title=title,
+#                 description=description,
+#                 starting_bid=starting_bid_decimal,
+#                 address=address,
+#                 size=size,
+#                 year_built=year_built,
+#                 current_bid=starting_bid_decimal,
+#                 tags=tags,
+#                 user=request.user,
+#             )
+#             listing.save()
+
+#             for image in images:
+#                 ListingImage.objects.create(listing=listing, image=image)
+#                 print(f"Image {image} saved for listing {listing.id}")
+
+#             return redirect('products')
+
+#     return render(request, 'auctions/create.html')
+
+# def products(request):
+#     listings = Listing.objects.all()
+#     context = {
+#         'listings': listings
+#     }
+#     return render(request, 'auctions/products.html', context)
 
 @login_required(login_url='login')
 def bid(request, listing_id):
