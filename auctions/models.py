@@ -51,6 +51,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 import datetime
+from zoneinfo import ZoneInfo
 
 class User(AbstractUser):
     pass
@@ -82,12 +83,14 @@ class ListingImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.listing.title}"
-
+IST = ZoneInfo("Asia/Kolkata")
 class Bid(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
     bidder = models.ForeignKey(User, on_delete=models.CASCADE)
     bid_amount = models.DecimalField(max_digits=10, decimal_places=2)
     bid_time = models.DateTimeField(default=timezone.now)
-
+    def get_ist_time(self):
+        # Convert bid_time to IST using zoneinfo
+        return self.bid_time.astimezone(IST)
     def __str__(self):
         return f"{self.bidder.username} - {self.bid_amount}"

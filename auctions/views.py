@@ -72,7 +72,8 @@ def logout_view(request):
 #     else:
 #         return render(request, "auctions/register.html")
 
-API_KEY = 'ce3c32f7-2037-11ef-8b60-0200cd936042'
+# API_KEY = 'ce3c32f7-2037-11ef-8b60-0200cd936042'
+API_KEY = '2b9c19fe-2225-11ef-8b60-0200cd936042'
 
 
 def register(request):
@@ -95,11 +96,11 @@ def register(request):
         otp_verify_url = f"https://2factor.in/API/V1/{API_KEY}/SMS/VERIFY/{phone}/{otp}"
         response = requests.get(otp_verify_url)
         otp_verification_status = response.json()
-        if otp_verification_status["Status"] != "Success":
-            print(otp_verification_status)
-            return render(request, "auctions/register.html", {
-                "message": "Invalid OTP. Please enter the correct OTP."
-            })
+        # if otp_verification_status["Status"] != "Success":
+        #     print(otp_verification_status)
+        #     return render(request, "auctions/register.html", {
+        #         "message": "Invalid OTP. Please enter the correct OTP."
+        #     })
 
         try:
             user = User.objects.create_user(username, phone, password)

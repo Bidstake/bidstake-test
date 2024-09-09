@@ -251,22 +251,24 @@
     </div>
 
     <script>
-        function prevImage(button) {
-            let container = button.closest('.listing-card');
-            let images = container.querySelectorAll('.listing-image');
-            let visibleIndex = Array.from(images).findIndex(img => img.style.display === 'block');
-            images[visibleIndex].style.display = 'none';
-            visibleIndex = (visibleIndex - 1 + images.length) % images.length;
-            images[visibleIndex].style.display = 'block';
+        function nextImage(button) {
+            const card = button.parentNode;
+            const images = card.querySelectorAll('.listing-image');
+            const currentIndex = Array.from(images).findIndex(img => img.style.display !== 'none');
+            const nextIndex = (currentIndex + 1) % images.length;
+
+            images[currentIndex].style.display = 'none';
+            images[nextIndex].style.display = 'block';
         }
 
-        function nextImage(button) {
-            let container = button.closest('.listing-card');
-            let images = container.querySelectorAll('.listing-image');
-            let visibleIndex = Array.from(images).findIndex(img => img.style.display === 'block');
-            images[visibleIndex].style.display = 'none';
-            visibleIndex = (visibleIndex + 1) % images.length;
-            images[visibleIndex].style.display = 'block';
+        function prevImage(button) {
+            const card = button.parentNode;
+            const images = card.querySelectorAll('.listing-image');
+            const currentIndex = Array.from(images).findIndex(img => img.style.display !== 'none');
+            const prevIndex = (currentIndex - 1 + images.length) % images.length;
+
+            images[currentIndex].style.display = 'none';
+            images[prevIndex].style.display = 'block';
         }
 
         document.getElementById('bid_amount').addEventListener('input', function(evt) {
